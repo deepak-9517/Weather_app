@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style>
+		body{
+			height: 700px;
+			width: 95%;
+			border: 12px solid green;
+			border-radius: 0px 50px 0px 50px;
+		}
+		#main{
+			margin-left: 600px;
+			font-family: cursive;
+		}
+		input[type=text]{
+			height: 45px;
+			width: 220px;
+			background-color: rgb(207, 214, 216);
+			border-radius: 10px;
+			font-family: cursive;
+			font-size: 20px;
+			text-align: center;
+			/* border: none; */
+		}
+		input[type=submit]{
+			padding: 10px 50px;
+			font-size: 20px;
+			margin-left: 30px;
+			margin-top: 5px;
+			font-family: cursive;
+			border: none;
+			background-color: rgb(194, 49, 39);
+			color: white;
+			font-weight: bold;
+			border-radius: 10px;
+		}
+		input[type=submit]:hover{
+			background-color: green;
+		}
+	</style>
+</head>
+<body>
+	<div id="main">
+		<h1>Weather Info App</h1>
+		<img src="cloud.png" height="150">
+		<form>
+			<input type="text" id="city" placeholder="Enter city name"><br>
+			<input type="submit" value="Click">
+		</form>
+		<div id="city-info"></div>
+	</div>
+</body>
+<script>
+	const keyapi = "4554b5b775def5bb4e78b19ea57ece93";
+	const form=document.querySelector("form");
+	 	  form.addEventListener('submit',function(e){
+			e.preventDefault();
+			let cityName=document.getElementById("city").value;
+			getWether(cityName);
+		  })
+		  async function getWether(cityName){
+			try{
+			let url=`http://api.openweathermap.org/data/2.5/weather?q=${cityName}&APPID=${keyapi}`;
+			// console.log(url)
+			let response=await fetch(url);
+			let data = await response.json();
+			showWetherInfo(data);
+			}
+			catch(err){
+				alert("sry city not found in my data base")
+			}
+		}
+		function showWetherInfo(data){
+			console.log(data);
+			const weatherInfo=document.getElementById("city-info");
+			let imgIcon="http://openweathermap.org/img/w/"+data.weather[0].icon+".png";
+			weatherInfo.innerHTML=`
+				<h2>Country Code : ${data.sys.country}</h2>
+				<h3>CityName : ${data.name}</h3>
+				<p>Temprature : 					${data.main.temp}f|${Math.round(data.main.temp-273.15)}c</p>
+			 <p>Humidity : ${data.main.humidity}%</p>
+			 <p>Pressure : ${data.main.pressure}hpa</p>
+			 <p>Weather : ${data.weather[0].description}<img src=${imgIcon} height="25" width="50"></p>`
+			 ;
+		}
+
+</script>
+</html>
